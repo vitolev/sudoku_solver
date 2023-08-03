@@ -3,6 +3,8 @@ import re
 import os
 import subprocess
 
+def remove_non_digits(input_string):
+    return re.sub(r'\D', '', input_string)
 
 def measure_baseline():
     input = f"""
@@ -22,7 +24,7 @@ def measure_baseline():
 
 
 def run(sudoku, timeout):
-    with open(sudoku.replace(".sdk", ".out")) as f:
+    with open(sudoku.replace(".sdk", ".out"), encoding="utf-8") as f:
         expected_solution = f.read().strip()
     proc = subprocess.run(
         ["./sudoku.exe", sudoku], check=True, capture_output=True, timeout=timeout
@@ -35,7 +37,7 @@ def run(sudoku, timeout):
     )
     if match:
         result = (
-            "CORRECT" if match.group("solution").strip() == expected_solution else "WRONG"
+            "CORRECT" if remove_non_digits(match.group("solution").strip()) == remove_non_digits(expected_solution) else "WRONG"
         )
         time = float(match.group("time"))
         return result, time
@@ -71,4 +73,4 @@ sudokus = [
     if filename.endswith(".sdk")
 ]
 
-# add_benchmarks("ImePriimek", sudokus, "benchmarks.csv")
+add_benchmarks("ImePriimek", sudokus, "Vito.csv")

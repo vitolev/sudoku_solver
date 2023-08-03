@@ -16,6 +16,14 @@ let chunkify size lst =
   in
   aux [] [] size lst
 
+let string_of_option_int cell =
+  match cell with
+  | None -> " "
+  | Some c -> Int.to_string c
+
+let string_of_int cell =
+  Int.to_string cell
+
 let string_of_list string_of_element sep lst =
   lst |> List.map string_of_element |> String.concat sep
 
@@ -43,22 +51,51 @@ let print_grid string_of_cell grid =
 
 (* Funkcije za dostopanje do elementov mreže *)
 
-let get_row (grid : 'a grid) (row_ind : int) = failwith "TODO"
+let get_row (grid : 'a grid) (row_ind : int) = 
+  Array.init 9 (fun col_ind -> grid.(row_ind).(col_ind))
 
-let rows grid = failwith "TODO"
+let rows grid = List.init 9 (get_row grid)
 
 let get_column (grid : 'a grid) (col_ind : int) =
   Array.init 9 (fun row_ind -> grid.(row_ind).(col_ind))
 
 let columns grid = List.init 9 (get_column grid)
 
-let get_box (grid : 'a grid) (box_ind : int) = failwith "TODO"
+(*┏━┯━┯━┓
+  ┃0│1│2┃
+  ┃3│4│5┃   The map of which index represent which sudoku box
+  ┃6│7│8┃
+  ┗━┷━┷━┛*)
+let get_box (grid : 'a grid) (box_ind : int) = 
+  let box_size = 3 in
+  let box_row_start = (box_ind / box_size) * box_size in
+  let box_col_start = (box_ind mod box_size) * box_size in
 
-let boxes grid = failwith "TODO"
+  let extract_row r = Array.sub r box_col_start box_size in
+  let extract_subgrid subgrid =
+    Array.map extract_row (Array.sub (Array.of_list (rows subgrid)) box_row_start box_size)
+  in
+  extract_subgrid grid
+
+let get_flatten_box (grid : 'a grid) (box_ind : int) =
+  let box = Array.to_list (get_box grid box_ind) in
+  let rec aux (box : 'a array list) =
+    match box with
+    | [] -> []
+    | x :: xs -> (Array.to_list x) @ aux xs 
+  in
+  Array.of_list (aux box)
+
+let boxes grid = List.init 9 (get_box grid)
+let flatten_boxes grid = List.init 9 (get_flatten_box grid)
 
 (* Funkcije za ustvarjanje novih mrež *)
 
-let map_grid (f : 'a -> 'b) (grid : 'a grid) : 'b grid = failwith "TODO"
+let map_grid (f : 'a -> 'b) (grid : 'a grid) : 'b grid = 
+  let map_row row =
+    Array.map f row
+  in
+  Array.map map_row (Array.of_list (rows grid))
 
 let copy_grid (grid : 'a grid) : 'a grid = map_grid (fun x -> x) grid
 
@@ -88,16 +125,17 @@ let grid_of_string cell_of_char str =
     |> List.filter (function [] -> false | _ -> true)
     |> List.map Array.of_list |> Array.of_list
   in
-  if Array.length grid <> 9 then failwith "Nepravilno število vrstic";
+  if Array.length grid <> 9 then failwith "Wrong number of rows";
   if Array.exists (fun x -> x <> 9) (Array.map Array.length grid) then
-    failwith "Nepravilno število stolpcev";
+    failwith "Wrong number of coulums";
   grid
 
 (* Model za vhodne probleme *)
 
 type problem = { initial_grid : int option grid }
 
-let print_problem problem : unit = failwith "TODO"
+let print_problem problem : unit = 
+  print_grid string_of_option_int problem.initial_grid
 
 let problem_of_string str =
   let cell_of_char = function
@@ -109,8 +147,20 @@ let problem_of_string str =
 
 (* Model za izhodne rešitve *)
 
-type solution = int grid
+type solution = {grid : int grid}
 
-let print_solution solution = failwith "TODO"
+let print_solution solution =
+  print_grid string_of_int solution.grid
 
-let is_valid_solution problem solution = failwith "TODO"
+(*
+   let is_valid_solution problem solution = 
+  let initial_grid = map_grid (fun a -> match a with None -> 0 | Some c -> c) problem.initial_grid in
+  let solved_grid = solution.grid in
+  print_endline (string_of_bool (initial_grid = solved_grid));
+  print_solution solution;
+  initial_grid = solved_grid
+*)
+
+let is_valid_solution (solution : solution) = true 
+(* It should check that there are no duplicate numbers in the row, column or box. *)
+
