@@ -83,7 +83,6 @@ let rec print_int_list_array_array arr i j =
     end
 
 let find_best_position_to_explore (arr : int list array array) : available option =
-  
   let min_length = ref max_int in
   let min_indices = ref (-1, -1) in
 

@@ -161,6 +161,28 @@ let print_solution solution =
   initial_grid = solved_grid
 *)
 
-let is_valid_solution (solution : solution) = true 
-(* It should check that there are no duplicate numbers in the row, column or box. *)
+let has_duplicates arr =
+  let seen = [] in
+  let rec check_duplicates (list : int list) (seen : int list)= 
+    match list with
+    | [] -> false
+    | x :: xs ->
+      if List.mem x seen then
+        true
+      else
+        check_duplicates xs (x :: seen)
+  in
+  check_duplicates (Array.to_list arr) seen
+
+let is_valid_solution (solution : solution) = 
+  let rows = rows solution.grid in
+  let columns = columns solution.grid in 
+  let boxes = flatten_boxes solution.grid in 
+  if Array.exists has_duplicates (Array.of_list rows) 
+    || Array.exists has_duplicates (Array.of_list columns) 
+    || Array.exists has_duplicates (Array.of_list boxes) then 
+      false
+  else
+    true
+(* Not sure but I think it is pointless to check if a solution is valid. *)
 

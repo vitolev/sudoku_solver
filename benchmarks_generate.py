@@ -69,7 +69,7 @@ def add_benchmarks(name, sudokus, csv_name, timeout=60, baseline=None):
 
 sudokus = [
     os.path.join("sudokuji", filename)
-    for filename in sorted(os.listdir("sudokuji"))
+    for filename in sorted(os.listdir("OCaml program/sudokuji"))
     if filename.endswith(".sdk")
 ]
 
