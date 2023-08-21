@@ -12,7 +12,8 @@ There is a `sudoku.exe` file, which can be used to solve a given sudoku. By runn
 
 the program will solve the sudoku given in the `example-sudoku.sdk` file. In the directory `sudokuji` there are test cases that can be used to solve with this program. If you want to solve a custom sudoku make .sdk file using the same pattern as in test cases.
 
-At the time of doing this project there were terrible storms with heavy rain for a couple of days, hence I had nothing else to do, so I also build a simple app for a more user friendly experience in Java. In the `Java App/FINAL_APP` there is a `Sudoku_solver.jar` file of this app and another copy of `sudoku.exe` file. In order to run .jar file and use it to solve custom sudokus, both of these files must be in the same directory.
-I have to mention that the app is not fully functional. If no solution for the given sudoku exist nothing will happen, the overall UI could be improved, the algorithm for finding the solution can sometimes be quite time consuming (so I set the max time for solving it to 3 seconds), ...
+At the time of doing this project I had nothing better to do, so I also build a simple app for a more user friendly experience in Java. In the `Java App/FINAL_APP` there is a `Sudoku_solver.jar` file of this app and another copy of `sudoku.exe` file. In order to run .jar file and use it to solve custom sudokus, both of these files must be in the same directory.
+
+I have to mention that there is plenty of room for improvement for the app. Some of the issues: If no solution for the given sudoku exist nothing will happen, the overall UI could be improved, the algorithm for finding the solution should be improved as it can sometimes be quite time consuming (so I set the max time for solving it to 3 seconds for now), ...
 
 Also in order for everything to work there must be OCaml and Java installed.
